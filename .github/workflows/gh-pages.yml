@@ -5,8 +5,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        with:
-          path: LabyrinthRepo
 
       - name: Setup .NET9
         uses: actions/setup-dotnet@v3
@@ -26,11 +24,10 @@ jobs:
           
       - name: Publish dotnet project
         run: |
-            cd LabyrinthRepo/
-            dotnet publish -c Release /p:DefineConstants=WASM
+          dotnet publish -c Release /p:DefineConstants=WASM
 
       - name: Deploy to github pages
         uses: peaceiris/actions-gh-pages@v3
         with:
             github_token: ${{ secrets.GITHUB_TOKEN }}
-            publish_dir: LabyrinthRepo/Labyrinth/bin/Release/net9.0/browser-wasm/AppBundle
+            publish_dir: Labyrinth/bin/Release/net9.0/browser-wasm/AppBundle
