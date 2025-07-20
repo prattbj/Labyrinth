@@ -20,23 +20,23 @@ jobs:
           repository: raysan5/raylib
           path: RaylibRepo
           
-      - name: Install wasm-tools
-        run: |
-          dotnet workload install wasm-tools
-
-      - name: Setup emsdk
-        uses: mymindstorm/setup-emsdk@v11
-
-      - name: Build raylib for Web
-        run: |
-          cd RaylibRepo
-          emcmake cmake \
-            -B artifacts \
-            -D BUILD_EXAMPLES=Off \
-            -D PLATFORM=Web
-          cmake --build artifacts
-          cp artifacts/raylib/libraylib.a $GITHUB_WORKSPACE/LabyrinthRepo/Labyrinth/Wasm/raylib.a
-          
+#      - name: Install wasm-tools
+#        run: |
+#          dotnet workload install wasm-tools
+#
+#     - name: Setup emsdk
+#        uses: mymindstorm/setup-emsdk@v11
+#
+#      - name: Build raylib for Web
+#        run: |
+#          cd RaylibRepo
+#          emcmake cmake \
+#            -B artifacts \
+#            -D BUILD_EXAMPLES=Off \
+#            -D PLATFORM=Web
+#          cmake --build artifacts
+#          cp artifacts/raylib/libraylib.a $GITHUB_WORKSPACE/LabyrinthRepo/Labyrinth/Wasm/raylib.a
+#          
       - name: Publish dotnet project
         run: |
             cd LabyrinthRepo/
