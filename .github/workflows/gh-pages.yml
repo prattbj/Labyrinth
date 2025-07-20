@@ -26,9 +26,6 @@ jobs:
 
       - name: Setup emsdk
         uses: mymindstorm/setup-emsdk@v11
-        with:
-          version: 4.0.11
-          actions-cache-folder: 'emsdk-cache'
 
       - name: Build raylib for Web
         run: |
