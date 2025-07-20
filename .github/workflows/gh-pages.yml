@@ -20,9 +20,9 @@ jobs:
           repository: raysan5/raylib
           path: RaylibRepo
           
-#      - name: Install wasm-tools
-#        run: |
-#          dotnet workload install wasm-tools
+      - name: Install wasm-tools
+        run: |
+          dotnet workload install wasm-tools
 #
 #     - name: Setup emsdk
 #        uses: mymindstorm/setup-emsdk@v11
