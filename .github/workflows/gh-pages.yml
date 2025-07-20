@@ -3,6 +3,20 @@ jobs:
   gh-pages:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          path: LabyrinthRepo
+
+      - name: Setup .NET9
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0'
+
+      - name: Install wasm-tools
+        run: |
+          dotnet workload install wasm-tools
+          
       - name: Publish dotnet project
         run: |
             cd LabyrinthRepo/
