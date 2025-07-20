@@ -1,0 +1,68 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Choose>
+    <When Condition="$(DefineConstants.Contains('WASM'))">
+      <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RuntimeIdentifier>browser-wasm</RuntimeIdentifier>
+        <WasmMainJSPath>Wasm\main.js</WasmMainJSPath>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <InvariantGlobalization>true</InvariantGlobalization>
+        <EnableAggressiveTrimming>true</EnableAggressiveTrimming>
+        <PublishTrimmed>true</PublishTrimmed>
+        <TrimMode>full</TrimMode>
+        <RunAOTCompilation>true</RunAOTCompilation>
+        <WasmBuildNative>true</WasmBuildNative>
+        <WasmNativeStrip>true</WasmNativeStrip>
+        <WasmAllowUndefinedSymbols>true</WasmAllowUndefinedSymbols>
+        <WasmEnableExceptionHandling>false</WasmEnableExceptionHandling>
+      </PropertyGroup>
+    </When>
+    <When Condition="!$(DefineConstants.Contains('WASM'))">
+      <PropertyGroup>
+            <OutputType>Exe</OutputType>
+            <TargetFramework>net9.0</TargetFramework>
+            <ImplicitUsings>enable</ImplicitUsings>
+            <Nullable>enable</Nullable>
+      </PropertyGroup>
+    </When>
+  </Choose>
+
+
+  <ItemGroup>
+    <PackageReference Include="MIConvexHull" Version="1.1.19.1019" />
+    <PackageReference Include="Raylib-cs" Version="7.0.1" />
+  </ItemGroup>
+
+  <Choose>
+    <When Condition="$(DefineConstants.Contains('WASM'))">
+      <ItemGroup>
+        <WasmExtraFilesToDeploy Include="Wasm\index.html" />
+        <WasmExtraFilesToDeploy Include="Wasm\main.js" />
+        <NativeFileReference Include="Wasm\raylib.a" />
+        <WasmFilesToIncludeInFileSystem Include="Assets\**\*.*" TargetPath="Assets\%(RecursiveDir)\%(Filename)%(Extension)" />
+      </ItemGroup>
+      <PropertyGroup>
+          <EmccFlags>-s USE_GLFW=3 -O3 -lexports.js</EmccFlags>
+          <!-- -lexports.js -sASYNCIFY=1-->
+        </PropertyGroup>
+    </When>
+    <!--
+    <Choose>
+      <When Condition=" $(Configuration) == 'Debug' ">
+        <PropertyGroup>
+          <WasmEmitSymbolMap>true</WasmEmitSymbolMap>
+          <EmccFlags>-sUSE_GLFW=3 -sVERBOSE=1 -Wbad-function-cast -Wcast-function-type -O2 -g3 -sINITIAL_MEMORY=128MB -sMAXIMUM_MEMORY=2048MB -sALLOW_MEMORY_GROWTH=1 -lexports.js</EmccFlags>
+        </PropertyGroup>
+      </When>
+      <When Condition=" $(Configuration) == 'Release' ">
+        <PropertyGroup>
+          <EmccFlags>-s USE_GLFW=3 -O3 -lexports.js</EmccFlags>
+        </PropertyGroup>
+      </When>
+    </Choose>
+     -->
+  </Choose>
+</Project>
