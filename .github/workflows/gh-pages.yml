@@ -28,9 +28,6 @@ jobs:
         run: |
           cd LabyrinthWasm/
           dotnet publish -c Release /p:DefineConstants=WASM
-          
-      - name: List AppBundle output
-        run: ls -laR ${{ github.workspace }}/bin/Release/net9.0/browser-wasm/AppBundle
         
       - name: Deploy to github pages
         uses: peaceiris/actions-gh-pages@v3
