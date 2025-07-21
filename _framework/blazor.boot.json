@@ -1,0 +1,53 @@
+{
+  "mainAssemblyName": "Labyrinth.dll",
+  "resources": {
+    "hash": "sha256-i+sIzbvN7eThTAhB6n1KKv7YraSXMGlD0YiuQPKfoHo=",
+    "jsModuleNative": {
+      "dotnet.native.js": "sha256-Ve/kMll/asvMC2RyaeOb3Y5nGapuVzRYxh9AVZmeSsY="
+    },
+    "jsModuleRuntime": {
+      "dotnet.runtime.js": "sha256-x+PnWU47EIr/zL3xxqIUMDJi/dy5904TVGunDqCvjIY="
+    },
+    "wasmNative": {
+      "dotnet.native.wasm": "sha256-5oFA3wM8Ry37Twh+MKjcyiRJrKRN+u+g4J6SsE3Vnj4="
+    },
+    "coreAssembly": {
+      "Labyrinth.wasm": "sha256-NUcUxLRrDU3Uawh9S71Kq8Pq54OaMYg6BayMFy6ksaE=",
+      "MIConvexHull.wasm": "sha256-Ne5pVWfHj44bFKkZt6wCvQfv4t6ERz/3Q3ib9/JvW0Y=",
+      "Raylib-cs.wasm": "sha256-O1RTuR1oBPZ3gye4tvWCxXGHJTCAJOZ6ySybJL/7ahw=",
+      "System.Collections.wasm": "sha256-YHXMD2cVBDhPGi6OjKsT4+69/HyTQxHtMDTE/BgOTTc=",
+      "System.Console.wasm": "sha256-gaqlLsxsdHi/MB6ozoTzSDa7YrJCO5Yerq/CjtGkhfo=",
+      "System.Linq.wasm": "sha256-mZGpkF3UP01htqgUVJZZoJVuE7dcaCxqG3T6y2Rtp+g=",
+      "System.Private.CoreLib.wasm": "sha256-ucyOoj47z76tERMQS1okwKx1uQT2ySpULEurdZwEJ1I=",
+      "System.Runtime.InteropServices.JavaScript.wasm": "sha256-eO7fUfou0qQKPbL9kjP4uOevrm6pTK+CF1BcFYBOamw="
+    },
+    "assembly": {},
+    "coreVfs": {
+      "runtimeconfig.bin": {
+        "supportFiles/6_runtimeconfig.bin": "sha256-j8dmK7YPHHTbkS+ZwJixur+jBDk8AnCzB1le9oZbtDQ="
+      }
+    },
+    "vfs": {
+      "Assets/blank.png": {
+        "supportFiles/0_blank.png": "sha256-wDSZqwKd2OY7T/NGZeAUUiz/GBMtsVzaLObxq+1su4A="
+      },
+      "Assets/CaveWall.png": {
+        "supportFiles/1_CaveWall.png": "sha256-wdwZPo+dWMrir8lp72iXPy4fnf5Gy+XGXtpIaFHjMq0="
+      },
+      "Assets/Checkerboard_pattern.svg.png": {
+        "supportFiles/2_Checkerboard_pattern.svg.png": "sha256-BwE8ZM7oLHuIRJOj1XjCYllOAdA+GBx5jct8BGXybzY="
+      },
+      "Assets/Rocks.png": {
+        "supportFiles/3_Rocks.png": "sha256-t/96KyHbi1DYBA6RLSXz7nGGAK1DY9frxr6EmbNtM/w="
+      },
+      "Assets/WallEdge.png": {
+        "supportFiles/4_WallEdge.png": "sha256-PfkCARxC9eiRe3nWGAy2ofADvPpBWDNhx7J72oCVEkI="
+      },
+      "Assets/WallSegment.png": {
+        "supportFiles/5_WallSegment.png": "sha256-xNJccfHu72/d1mjLgZ9Hj4Y7+TD+r6vpAfHTgZxkoqE="
+      }
+    }
+  },
+  "debugLevel": 0,
+  "globalizationMode": "invariant"
+}
