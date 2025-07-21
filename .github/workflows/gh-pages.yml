@@ -30,11 +30,8 @@ jobs:
         run: ls -laR ${{ github.workspace }}/bin/Release/net9.0/browser-wasm/AppBundle
         
       - name: Deploy to github pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: actions/deploy-pages@v4 #peaceiris/actions-gh-pages@v3
         with:
-            github_token: ${{ secrets.GITHUB_TOKEN }}
+            #github_token: ${{ secrets.GITHUB_TOKEN }}
             publish_dir: ${{ github.workspace }}/bin/Release/net9.0/browser-wasm/AppBundle
-
-      - name: Redeploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+ 
