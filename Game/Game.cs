@@ -18,7 +18,7 @@ namespace Labyrinth.Game
         public Game()
         {
             player = new(map);
-            camera = new(new(Globals.GetScreenSize().X / 2, Globals.GetScreenSize().Y / 2), player.GetPos(), 0, 1.0f);
+            camera = new(new(Globals.GetScreenSize().X / 2, Globals.GetScreenSize().Y / 2), player.GetPos(), 0, 0.75f);
             Image image = Raylib.LoadImage("../Assets/Checkerboard_pattern.svg.png");
             checkerboard = Raylib.LoadTextureFromImage(image);
             Raylib.UnloadImage(image);

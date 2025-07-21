@@ -70,7 +70,7 @@ namespace Labyrinth.Game.Terrain
             if (current != null)
             {
                 Cell currentCell = cells[current.Value];
-                Raylib.DrawText(currentCell.GetSection().ToString(), (int?)Globals.GetGame()?.GetPlayer()?.GetPos().X ?? 0, (int?)Globals.GetGame()?.GetPlayer()?.GetPos().Y ?? 0, 24, Color.Beige);
+                //Raylib.DrawText(currentCell.GetSection().ToString(), (int?)Globals.GetGame()?.GetPlayer()?.GetPos().X ?? 0, (int?)Globals.GetGame()?.GetPlayer()?.GetPos().Y ?? 0, 24, Color.Beige);
                 currentCell.Draw();
             }
             // foreach (var p in path)
