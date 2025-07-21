@@ -1,0 +1,41 @@
+on: [push, workflow_dispatch]
+jobs:
+  gh-pages:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          path: LabyrinthWasm
+          
+      - name: Setup .NET9
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0'
+          
+ #     - name: Checkout raylib
+ #       uses: actions/checkout@v3
+ #       with:
+ ##         ref: 5.5
+  #        repository: raysan5/raylib
+  #        path: RaylibRepo
+          
+      - name: Install wasm-tools
+        run: |
+          dotnet workload install wasm-tools
+          
+      - name: Publish dotnet project
+        run: |
+          cd LabyrinthWasm/
+          dotnet publish -c Release /p:DefineConstants=WASM
+          
+      - name: List output after publish
+        run: |
+          find LabyrinthWasm/ -type d -name AppBundle
+          
+      - name: Deploy to github pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            publish_dir: LabyrinthWasm/bin/Release/net9.0/browser-wasm/AppBundle
+ 
