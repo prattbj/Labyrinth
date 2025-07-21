@@ -8,7 +8,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-          
+        with:
+          path: LabyrinthWasm
       - name: Setup .NET9
         uses: actions/setup-dotnet@v3
         with:
@@ -27,6 +28,7 @@ jobs:
           
       - name: Publish dotnet project
         run: |
+          cd LabyrinthWasm/
           dotnet publish -c Release /p:DefineConstants=WASM
           
       - name: List AppBundle output
