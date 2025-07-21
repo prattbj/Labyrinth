@@ -1,6 +1,9 @@
 on: [workflow_dispatch]
 jobs:
   gh-pages:
+    permissions:
+        pages: write     
+        id-token: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
