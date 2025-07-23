@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "Labyrinth.dll",
   "resources": {
-    "hash": "sha256-TfkSHb9wm0QskD73+Xjuk1db+TIhIaOB/TcUZhMXAsE=",
+    "hash": "sha256-FM9o+5KRowWTHnFqUY8mY+F8E06xZ10mPUNDlziW0gE=",
     "jsModuleNative": {
       "dotnet.native.js": "sha256-eDSkgZjKywq7E7Bp5bMEV+ZDan3kb3Md6hz1BuUHZsA="
     },
@@ -9,10 +9,10 @@
       "dotnet.runtime.js": "sha256-x+PnWU47EIr/zL3xxqIUMDJi/dy5904TVGunDqCvjIY="
     },
     "wasmNative": {
-      "dotnet.native.wasm": "sha256-7zX1xdc0onZC/wS+xULKIzFujitX8/DjO9hcBZeVpyE="
+      "dotnet.native.wasm": "sha256-7AT6ZqfNjNAsCW1DqJXicPtCVrlBZnEwh+hxd+3feRw="
     },
     "coreAssembly": {
-      "Labyrinth.wasm": "sha256-C+Lrm729sc42boHy+9y9t8KNSguQkywkcflCyC/hLks=",
+      "Labyrinth.wasm": "sha256-g/SSxsUtLoKdo0OiAVetg24lSwWO0qEfRwoHsqVQLhE=",
       "MIConvexHull.wasm": "sha256-Ne5pVWfHj44bFKkZt6wCvQfv4t6ERz/3Q3ib9/JvW0Y=",
       "Raylib-cs.wasm": "sha256-dtyanjHXykmkaYzovuzZEP1RQguPD0UpfPXTlST8E/s=",
       "System.Collections.wasm": "sha256-YHXMD2cVBDhPGi6OjKsT4+69/HyTQxHtMDTE/BgOTTc=",
