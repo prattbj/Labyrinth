@@ -1,5 +1,6 @@
 A video game in development. Currently, it contains a maze that you have to traverse.
 
+[GitHub Pages](https://prattbj.github.io/Labyrinth)
 
 Controls: 
 - WASD for movement
