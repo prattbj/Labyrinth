@@ -49,6 +49,13 @@
           <!-- -lexports.js -sASYNCIFY=1-->
         </PropertyGroup>
     </When>
+    <When Condition="!$(DefineConstants.Contains('WASM'))">
+      <ItemGroup>
+        <Content Include="Assets\**\*">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+      </ItemGroup>
+    </When>
     <!--
     <Choose>
       <When Condition=" $(Configuration) == 'Debug' ">

@@ -23,11 +23,12 @@ namespace Labyrinth.Game.Entities.Players
         private Weapon abilityOne = new PeaShooter();
         private Map map;
         private int currentCellKey;
+        private int radius = 32;
         public Player(Map map)
         {
             this.map = map;
-            Image image = Raylib.LoadImage("../Assets/blank.png");
-            Raylib.ImageResize(ref image, 64, 64);
+            Image image = Raylib.LoadImage("./Assets/Rocks.png");
+            Raylib.ImageResize(ref image, radius * 2, radius * 2);
             Raylib.ImageDrawRectangle(ref image, 0, 0, image.Width, image.Height, Color.Blank);
             Raylib.ImageDrawCircle(ref image, image.Width / 2, image.Height / 2, image.Width / 2, Color.Blue);
             texture = Raylib.LoadTextureFromImage(image);
@@ -99,252 +100,62 @@ namespace Labyrinth.Game.Entities.Players
         {
             abilityOne.ReduceCooldown();
         }
+        Vector2 ClosestPointOnLineSegment(Vector2 a, Vector2 b, Vector2 point)
+        {
+            Vector2 ab = b - a;
+            float abLengthSq = ab.LengthSquared();
+            if (abLengthSq == 0) return a;
 
+            float t = Vector2.Dot(point - a, ab) / abLengthSq;
+            t = Math.Clamp(t, 0f, 1f);
+            return a + ab * t;
+        }
+        public Vector2 GetCenter()
+        {
+            return pos + new Vector2(radius, radius);
+        }
         private void Move()
         {
             Cell currentCell = map.GetCell(currentCellKey);
-            
-            float playerRadius = texture.Width / 2f;
-            Vector2 centerOffset = new Vector2(playerRadius, texture.Height / 2f);
-            // Before updating pos
+
+            float playerRadius = radius;
+            Vector2 centerOffset = new(radius, radius);
+
             Vector2 previousCenter = pos + centerOffset;
+
             pos += movementVector;
+            Vector2 newCenter = pos + centerOffset;
+
+            foreach (var (a, b) in currentCell.GetCollisionLines())
+            {
+                Vector2 closest = ClosestPointOnLineSegment(a, b, newCenter);
+                float distSq = Vector2.DistanceSquared(newCenter, closest);
+
+                if (distSq < playerRadius * playerRadius)
+                {
+                    Vector2 collisionNormal = Vector2.Normalize(newCenter - closest);
+                    float penetrationDepth = playerRadius - MathF.Sqrt(distSq);
+                    pos += collisionNormal * penetrationDepth;
+
+                    newCenter = pos + centerOffset;
+                }
+            }
+
             Vector2 proposedCenter = pos + centerOffset;
+
 
             foreach (var (a, b, cellA, cellB) in currentCell.GetLinkedLines())
             {
                 if (LinesIntersect(previousCenter, proposedCenter, a, b))
                 {
-                    // You're moving from currentCellKey to the other cell
                     currentCellKey = (currentCellKey == cellA) ? cellB : cellA;
                     break;
                 }
             }
-            
-            // float playerRadius = texture.Width / 2f;
-            // Vector2 centerOffset = new Vector2(playerRadius, texture.Height / 2f);
-            // Vector2 proposedCenter = pos + movementVector + centerOffset;
-            // List<List<Vector2>> polysToCheck = [];
-            // foreach (var (poly, _) in map.GetWallEdges())
-            // {
-            //     foreach (var p in poly)
-            //     {
-            //         if (Raylib.CheckCollisionPointCircle(p, Globals.GetGame()?.GetPlayer()?.GetPos() ?? new(0, 0), 3000))
-            //         {
-            //             polysToCheck.Add(poly);
-            //             break;
-            //         }
-            //     }
-            // }
-            // // Find all edges we're colliding with
-            // List<(Vector2 a, Vector2 b)> collidedEdges = new();
 
-            // // Check which polygon edges the player collides with
-            // foreach (var polygon in polysToCheck)
-            // {
-            //     int count = polygon.Count;
-            //     for (int i = 0; i < count; i++)
-            //     {
-            //         var a = polygon[i];
-            //         var b = polygon[(i + 1) % count];
 
-            //         if (Raylib.CheckCollisionCircleLine(proposedCenter, playerRadius, a, b))
-            //         {
-            //             collidedEdges.Add((a, b));
-            //         }
-            //     }
-            // }
-
-            // // If no collisions, move freely
-            // if (collidedEdges.Count == 0)
-            // {
-            //     pos += movementVector;
-            //     return;
-            // }
-
-            // // Try sliding along the direction of each collided wall edge
-            // foreach (var (a, b) in collidedEdges)
-            // {
-            //     Vector2 wallDir = Vector2.Normalize(b - a);
-
-            //     // Project movement onto wall direction (sliding vector)
-            //     float dot = Vector2.Dot(movementVector, wallDir);
-            //     Vector2 slideVector = wallDir * dot;
-
-            //     Vector2 slidePos = pos + slideVector;
-            //     Vector2 slideCenter = slidePos + centerOffset;
-
-            //     bool blocked = false;
-
-            //     // Recheck all edges for collisions at the new slide position
-            //     foreach (var (polygon, _) in map.GetWallEdges())
-            //     {
-            //         int count = polygon.Count;
-            //         for (int i = 0; i < count; i++)
-            //         {
-            //             var ea = polygon[i];
-            //             var eb = polygon[(i + 1) % count];
-
-            //             if (Raylib.CheckCollisionCircleLine(slideCenter, playerRadius, ea, eb))
-            //             {
-            //                 blocked = true;
-            //                 break;
-            //             }
-            //         }
-
-            //         if (blocked)
-            //             break;
-            //     }
-
-            //     if (!blocked)
-            //     {
-            //         pos = slidePos;
-            //         return; // Sliding succeeded
-            //     }
-            // }
-
-            // AttemptAxisSeparatedMove(playerRadius, centerOffset);
-
-            //#region <Mouse Movement>
-            /* Movement based on mouse
-            if (pathEnd != null)
-            {
-                Vector2 currentPos = new(pos.X + texture.Width / 2, pos.Y + texture.Height / 2);
-
-                Vector2 direction = Raymath.Vector2Subtract(pathEnd.Value, currentPos);
-
-                direction = Raymath.Vector2Normalize(direction);
-
-                float frameSpeed = speed / Globals.GetTickRate();
-                Vector2 movement = Raymath.Vector2Scale(direction, frameSpeed);
-
-                Vector2 nextPos = Raymath.Vector2Add(currentPos, movement);
-                if (Raylib.CheckCollisionPointLine(pathEnd.Value, currentPos, nextPos, 1))
-                {
-                    pos.X = pathEnd.Value.X - texture.Width / 2;
-                    pos.Y = pathEnd.Value.Y - texture.Height / 2;
-                }
-                else
-                {
-                    pos.X += movement.X;
-                    pos.Y += movement.Y;
-                }
-            }
-            */
-            //#endregion
         }
-        // private void AttemptAxisSeparatedMove(float radius, Vector2 centerOffset)
-        // {
-        //     // Try X-only
-        //     Vector2 tryX = pos + new Vector2(movementVector.X, 0);
-        //     Vector2 centerX = tryX + centerOffset;
-        //     bool xBlocked = false;
-
-        //     foreach (var edge in map.GetWallEdges())
-        //     {
-        //         var (a, b) = edge.edge;
-        //         if (Raylib.CheckCollisionCircleLine(centerX, radius, a, b))
-        //         {
-        //             xBlocked = true;
-        //             break;
-        //         }
-        //     }
-
-        //     if (!xBlocked)
-        //     {
-        //         pos.X = tryX.X;
-        //     }
-
-        //     // Try Y-only
-        //     Vector2 tryY = pos + new Vector2(0, movementVector.Y);
-        //     Vector2 centerY = tryY + centerOffset;
-        //     bool yBlocked = false;
-
-        //     foreach (var edge in map.GetWallEdges())
-        //     {
-        //         var (a, b) = edge.edge;
-        //         if (Raylib.CheckCollisionCircleLine(centerY, radius, a, b))
-        //         {
-        //             yBlocked = true;
-        //             break;
-        //         }
-        //     }
-
-        //     if (!yBlocked)
-        //     {
-        //         pos.Y = tryY.Y;
-        //     }
-        // }
-        // private void AttemptAxisSeparatedMove(float radius, Vector2 centerOffset)
-        // {
-        //     // --- Try X-only movement ---
-        //     Vector2 tryX = pos + new Vector2(movementVector.X, 0);
-        //     Vector2 centerX = tryX + centerOffset;
-        //     bool xBlocked = false;
-        //     List<List<Vector2>> polysToCheck = [];
-        //     foreach (var (poly, _) in map.GetWallEdges())
-        //     {
-        //         foreach (var p in poly)
-        //         {
-        //             if (Raylib.CheckCollisionPointCircle(p, Globals.GetGame()?.GetPlayer()?.GetPos() ?? new(0, 0), 3000))
-        //             {
-        //                 polysToCheck.Add(poly);
-        //                 break;
-        //             }
-        //         }
-        //     }
-        //     foreach (var polygon in polysToCheck)
-        //     {
-        //         int count = polygon.Count;
-        //         for (int i = 0; i < count; i++)
-        //         {
-        //             var a = polygon[i];
-        //             var b = polygon[(i + 1) % count];
-
-        //             if (Raylib.CheckCollisionCircleLine(centerX, radius, a, b))
-        //             {
-        //                 xBlocked = true;
-        //                 break;
-        //             }
-        //         }
-
-        //         if (xBlocked) break;
-        //     }
-
-        //     if (!xBlocked)
-        //     {
-        //         pos.X = tryX.X;
-        //     }
-
-        //     // --- Try Y-only movement ---
-        //     Vector2 tryY = pos + new Vector2(0, movementVector.Y);
-        //     Vector2 centerY = tryY + centerOffset;
-        //     bool yBlocked = false;
-
-        //     foreach (var polygon in polysToCheck)
-        //     {
-        //         int count = polygon.Count;
-        //         for (int i = 0; i < count; i++)
-        //         {
-        //             var a = polygon[i];
-        //             var b = polygon[(i + 1) % count];
-
-        //             if (Raylib.CheckCollisionCircleLine(centerY, radius, a, b))
-        //             {
-        //                 yBlocked = true;
-        //                 break;
-        //             }
-        //         }
-
-        //         if (yBlocked) break;
-        //     }
-
-        //     if (!yBlocked)
-        //     {
-        //         pos.Y = tryY.Y;
-        //     }
-        // }
-
+       
         static bool LinesIntersect(Vector2 p1, Vector2 p2, Vector2 q1, Vector2 q2)
         {
             float Cross(Vector2 a, Vector2 b) => a.X * b.Y - a.Y * b.X;

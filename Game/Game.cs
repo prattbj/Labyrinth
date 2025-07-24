@@ -19,9 +19,7 @@ namespace Labyrinth.Game
         {
             player = new(map);
             camera = new(new(Globals.GetScreenSize().X / 2, Globals.GetScreenSize().Y / 2), player.GetPos(), 0, 0.75f);
-            Image image = Raylib.LoadImage("../Assets/Checkerboard_pattern.svg.png");
-            checkerboard = Raylib.LoadTextureFromImage(image);
-            Raylib.UnloadImage(image);
+            
         }
         public Map GetMap()
         {
@@ -30,7 +28,6 @@ namespace Labyrinth.Game
         public void Draw()
         {
             Raylib.BeginMode2D(camera);
-            //Raylib.DrawTexture(checkerboard, 0, 0, Color.White);
             player?.Draw();
             foreach (Projectile projectile in projectiles)
             {
