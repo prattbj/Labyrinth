@@ -32,6 +32,7 @@ namespace Labyrinth.Game.Terrain
             foreach (var c in cells)
             {
                 c.Value.InitializeLines();
+                c.Value.CreateEdges();
             }
             spawnCellKey = generated.Item2.Index;
 

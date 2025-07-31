@@ -2,28 +2,12 @@ using Raylib_cs;
 using System.Numerics;
 namespace Labyrinth.Menu.MenuItem
 {
-    class MenuButton
+    class MenuButton(int posX, int posY, string text)
     {
         //private Texture2D texture;
-        private Vector2 pos;
+        private Vector2 pos = new(posX, posY);
         private bool isPressed = false;
-        private string text;
-        // public MenuButton(int posX, int posY, Image image)
-        // {
-        //     pos = new(posX, posY);
-        //     texture = Raylib.LoadTextureFromImage(image);
-        // }
-        public MenuButton(int posX, int posY, string text)
-        {
-            pos = new(posX, posY);
-            this.text = text;
-            // Image image = Raylib.LoadImage("../Assets/blank.png");
-            // Raylib.ImageResize(ref image, 256, 256);
-            // Raylib.ImageDrawText(ref image, text, 0, 0, 32, Color.Brown);
-            // texture = Raylib.LoadTextureFromImage(image);
-            
-            //Raylib.UnloadImage(image);
-        }
+        private readonly string text = text;
 
         public void Draw()
         {
@@ -36,7 +20,7 @@ namespace Labyrinth.Menu.MenuItem
         }
         public void HandleInput()
         {
-            if (Raylib.IsMouseButtonDown(MouseButton.Left) && HitTest(Raylib.GetMousePosition()))
+            if (Raylib.IsMouseButtonReleased(MouseButton.Left) && HitTest(Raylib.GetMousePosition()))
             {
                 isPressed = true;
             }

@@ -18,6 +18,7 @@
         <WasmNativeStrip>true</WasmNativeStrip>
         <WasmAllowUndefinedSymbols>true</WasmAllowUndefinedSymbols>
         <WasmEnableExceptionHandling>false</WasmEnableExceptionHandling>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
       </PropertyGroup>
     </When>
     <When Condition="!$(DefineConstants.Contains('WASM'))">
@@ -26,6 +27,7 @@
             <TargetFramework>net9.0</TargetFramework>
             <ImplicitUsings>enable</ImplicitUsings>
             <Nullable>enable</Nullable>
+            <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
       </PropertyGroup>
     </When>
   </Choose>

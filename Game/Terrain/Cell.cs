@@ -4,16 +4,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Numerics;
 using Raylib_cs;
+using System.Net.Quic;
+using System.Reflection;
+using System.Diagnostics;
 namespace Labyrinth.Game.Terrain
 {
     public class Cell
     {
         // public List<Cell> Neighbors = new();
         // public List<Cell> Links = new();
+
         public readonly static Color[] sectionColors = [Color.Blue, Color.Green, Color.Orange, Color.Purple, Color.Yellow, Color.Beige];
         private Dictionary<int, Cell> cells;
         private Vector2[] Polygon;
         private List<(Vector2, Vector2)> lines = [];
+        private List<Point[]> edgesToDraw = [];
+        private List<(Vector2, Vector2)> collisionLines = [];
         private List<(Vector2, Vector2, int, int)> linkedLines = [];
         private List<int> neighbors = [];
         private List<int> links = [];
@@ -21,8 +27,19 @@ namespace Labyrinth.Game.Terrain
         private readonly int section = -1;
         private readonly int index;
         private readonly Vector2 center;
+        static Shader shader = Raylib.LoadShader(null, "./Assets/Shaders/WallFragment.glsl");
+        static Texture2D wallTexture = Raylib.LoadTexture("./Assets/Textures/CaveWall.png");
+        static readonly Vector2[] uvs =
+        [
+            new Vector2(0, 0),
+            new Vector2(2, 0),
+            new Vector2(2, 2),
+            new Vector2(0, 2)
+        ];
+
         public Cell(Generation.CellInitializer cellInitializer, Dictionary<int, Cell> cells)
         {
+            Raylib.SetTextureWrap(wallTexture, TextureWrap.Repeat);
             Polygon = [.. cellInitializer.Polygon];
             section = cellInitializer.SectionIndex;
             this.cells = cells;
@@ -37,10 +54,118 @@ namespace Labyrinth.Game.Terrain
                 links.Add(c.Index);
             }
 
+            
+            
 
 
 
+        }
+        struct Point(float X, float Y, float U, float V)
+        {
+            
+            public float X = X;
+            public float Y = Y;
+            public float U = U;
+            public float V = V;
+        }
 
+        
+        public void CreateEdges()
+        {
+            float scale = 0.8f;
+            float textureRepeatFactor = 0.05f;
+
+
+            foreach (var (a, b) in lines)
+            {
+                Vector2 scaledA = ScalePoint(a, scale);
+                Vector2 scaledB = ScalePoint(b, scale);
+
+                // Compute edge direction and length
+                float edgeLength = Vector2.Distance(a, b);
+                float repeatU = edgeLength * textureRepeatFactor;
+
+                Point[] vertices =
+                [
+                    new(a.X, a.Y, 0, 0),
+                    new(scaledB.X, scaledB.Y, repeatU, 0),
+                    new(b.X, b.Y, repeatU, 1),
+
+
+                    new(a.X, a.Y, 0, 0),
+                    new(scaledA.X, scaledA.Y, repeatU, 1),
+                    new(scaledB.X, scaledB.Y, 0, 1),
+                ];
+                foreach (var link in linkedLines)
+                {
+                    if (a == link.Item1)
+                    {
+                        collisionLines.Add((a, scaledA));
+                    }
+                    if (a == link.Item2)
+                    {
+                        collisionLines.Add((a, scaledA));
+                    }
+                    if (b == link.Item2)
+                    {
+                        collisionLines.Add((b, scaledB));
+                    } 
+                    if (b == link.Item1)
+                    {
+                        collisionLines.Add((b, scaledB));
+                    } 
+                }
+                
+                collisionLines.Add((scaledA, scaledB));
+                edgesToDraw.Add(vertices);
+                foreach (int neighborIndex in links)
+                {
+                    if (!cells.TryGetValue(neighborIndex, out var neighbor))
+                        continue;
+
+                    // Skip if the neighbor hasn't generated geometry yet
+                    if (neighbor.edgesToDraw.Count == 0)
+                        continue;
+
+                    foreach (var (nA, nB) in neighbor.lines)
+                    {
+                        if (a == nA || a == nB)
+                        {
+                            Vector2 shared = a;
+                            Vector2 s = neighbor.ScalePoint(shared, scale);
+                            Point[] newPoint = [
+                                new(shared.X, shared.Y, 0, 0),
+                                new(s.X, s.Y, 0, 1),
+                                new(scaledA.X, scaledA.Y, 0, 0),
+
+                            ];
+                            collisionLines.Add((s, scaledA));
+                            edgesToDraw.Add( newPoint );
+                            break;
+                        }
+                        else if (b == nA || b == nB)
+                        {
+                            Vector2 shared = b;
+                            Vector2 s = neighbor.ScalePoint(shared, scale);
+                            Point[] newPoint = [
+                                new(shared.X, shared.Y, 0, 0),
+                                new(scaledB.X, scaledB.Y, 0, 1),
+                                new(s.X, s.Y, 0, 0),
+                            ];
+                            collisionLines.Add((s, scaledB));
+                            edgesToDraw.Add(newPoint);
+                            break;
+                        }
+                    }
+                }
+            }
+
+        }
+        
+        private Vector2 ScalePoint(Vector2 point, float scale)
+        {
+            Vector2 direction = point - center;
+            return center + direction * scale;
         }
 
         public Vector2 GetCenter()
@@ -48,9 +173,20 @@ namespace Labyrinth.Game.Terrain
             return center;
         }
 
+        // public List<(Vector2, Vector2)> GetCollisionLines()
+        // {
+        //     return lines;
+        // }
+
         public List<(Vector2, Vector2)> GetCollisionLines()
         {
-            return lines;
+            List<(Vector2, Vector2)> all = [];
+            all.AddRange(collisionLines);
+            foreach (var link in links)
+            {
+                all.AddRange(cells[link].collisionLines);
+            }
+            return all;
         }
         public int GetIndex()
         {
@@ -116,8 +252,24 @@ namespace Labyrinth.Game.Terrain
         {
             return seen;
         }
-        
-        public void Draw(HashSet<int>? drawnCells = null)
+        public void Draw()
+        {
+
+
+            Rlgl.Begin(DrawMode.Triangles);
+            Rlgl.SetTexture(wallTexture.Id);
+            DrawEdges();
+            Rlgl.End();
+
+            Rlgl.SetTexture(0);
+            
+
+            // foreach (var (a, b) in collisionLines)
+            // {
+            //     Raylib.DrawLineV(a, b, Color.Beige);
+            // }
+        }
+        public void DrawEdges(HashSet<int>? drawnCells = null)
         {
             drawnCells ??= [];
             if (drawnCells.Contains(index)) return;
@@ -127,11 +279,30 @@ namespace Labyrinth.Game.Terrain
             seen = true;
             Vector2 currentPos = Globals.GetGame()?.GetPlayer()?.GetPos() ?? new(0, 0);
             int radius = 1000;
-            foreach (var (a, b) in lines)
+
+            
+            float scale = 0.003f;
+            Color color = section > -1 ? sectionColors[section] : Color.Beige;
+            Rlgl.Color4ub(color.R, color.G, color.B, color.A);
+            
+            foreach (var edge in edgesToDraw)
             {
-                if (Raylib.CheckCollisionCircleLine(currentPos, radius, a, b))
+
+                if (Raylib.CheckCollisionCircleLine(currentPos, radius, new Vector2(edge[0].X, edge[0].Y), new Vector2(edge[1].X, edge[1].Y)))
                 {
-                    Raylib.DrawLineV(a, b, section > -1 ? sectionColors[section] : Color.Beige);
+                    // if (edge.Length == 3)
+                    // {
+                    //     Rlgl.Color4ub(0, 255, 0, 255);
+                    // }
+                    // else
+                    // {
+                    //     Rlgl.Color4ub(color.R, color.G, color.B, color.A);
+                    // }
+                    foreach (var point in edge)
+                    {
+                        Rlgl.TexCoord2f(point.X * scale, point.Y * scale);
+                        Rlgl.Vertex2f(point.X, point.Y);
+                    }
                 }
 
             }
@@ -140,7 +311,7 @@ namespace Labyrinth.Game.Terrain
             {
                 if (Raylib.CheckCollisionCircleLine(currentPos, radius, a, b))
                 {
-                    cells[index1 == this.index ? index2 : index1].Draw(drawnCells);
+                    cells[index1 == this.index ? index2 : index1].DrawEdges(drawnCells);
                 }
             }
         }

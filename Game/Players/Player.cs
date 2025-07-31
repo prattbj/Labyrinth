@@ -27,7 +27,7 @@ namespace Labyrinth.Game.Entities.Players
         public Player(Map map)
         {
             this.map = map;
-            Image image = Raylib.LoadImage("./Assets/Rocks.png");
+            Image image = Raylib.LoadImage("./Assets/Textures/Rocks.png");
             Raylib.ImageResize(ref image, radius * 2, radius * 2);
             Raylib.ImageDrawRectangle(ref image, 0, 0, image.Width, image.Height, Color.Blank);
             Raylib.ImageDrawCircle(ref image, image.Width / 2, image.Height / 2, image.Width / 2, Color.Blue);
