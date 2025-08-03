@@ -1,20 +1,20 @@
 {
   "mainAssemblyName": "Labyrinth.dll",
   "resources": {
-    "hash": "sha256-9j20sZ6i50MsaOfRvzvzpxh6mNIjL6vqX6DCqKkCFiI=",
+    "hash": "sha256-h0kUZPLvaoP348ZPjIMkuRYkF7QThNPi6FFiy/Z7a80=",
     "jsModuleNative": {
-      "dotnet.native.js": "sha256-WgBlFGvEGGWTH9K+iERRKX43MK/V12XpZiCfdwznET4="
+      "dotnet.native.js": "sha256-NFQnnriDZUbPrerDaF5b0DcGVJBWMd+Jme/Fuudc0LM="
     },
     "jsModuleRuntime": {
       "dotnet.runtime.js": "sha256-x+PnWU47EIr/zL3xxqIUMDJi/dy5904TVGunDqCvjIY="
     },
     "wasmNative": {
-      "dotnet.native.wasm": "sha256-8dq7qFA2R6uxCDrYsHZHMWY/PGMSvHLExKoMkAgqfT8="
+      "dotnet.native.wasm": "sha256-qv4UIyVT26XGaeMzOPvS24JbO/3GwrwATd+d8praqZ0="
     },
     "coreAssembly": {
-      "Labyrinth.wasm": "sha256-hxxvSqMoBbRopGK6RR5Dgwi/kALIPdbS9R/tHDhoOlA=",
+      "Labyrinth.wasm": "sha256-jEDftlm9HvO+XUhbYaOn00/JDCLp6lUt8I91sQozulo=",
       "MIConvexHull.wasm": "sha256-Ne5pVWfHj44bFKkZt6wCvQfv4t6ERz/3Q3ib9/JvW0Y=",
-      "Raylib-cs.wasm": "sha256-bu+1r8fffL2Puh1qxXAqWbsgELzKwOv7f1vmeoT4pxE=",
+      "Raylib-cs.wasm": "sha256-DJ3lTarJyRsW0spm2MAebf/6EtVCocmnatnRC9eBIUI=",
       "System.Collections.wasm": "sha256-YHXMD2cVBDhPGi6OjKsT4+69/HyTQxHtMDTE/BgOTTc=",
       "System.Console.wasm": "sha256-gaqlLsxsdHi/MB6ozoTzSDa7YrJCO5Yerq/CjtGkhfo=",
       "System.Linq.wasm": "sha256-mZGpkF3UP01htqgUVJZZoJVuE7dcaCxqG3T6y2Rtp+g=",
@@ -28,8 +28,8 @@
       }
     },
     "vfs": {
-      "Assets/Shaders/WallFragment.glsl": {
-        "supportFiles/0_WallFragment.glsl": "sha256-TBDEXHDoxZMhY5PF82qGn7qD53I/TY9AWGimJ70NXNw="
+      "Assets/Shaders/visibility.fs": {
+        "supportFiles/0_visibility.fs": "sha256-XqwyGZrCHVEWB61kVRrJqAFM6nLTMCDQ1+5Y3pM02Ok="
       },
       "Assets/Textures/blank.png": {
         "supportFiles/1_blank.png": "sha256-wDSZqwKd2OY7T/NGZeAUUiz/GBMtsVzaLObxq+1su4A="
