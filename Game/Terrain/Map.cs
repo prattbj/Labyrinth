@@ -6,7 +6,7 @@ using System.Numerics;
 using MIConvexHull;
 //using System.Drawing;
 using Raylib_cs;
-using Labyrinth.Game.Entities.Players;
+using Labyrinth.Game.Entities;
 using System.CodeDom.Compiler;
 namespace Labyrinth.Game.Terrain
 {
@@ -17,6 +17,7 @@ namespace Labyrinth.Game.Terrain
         Dictionary<int, Cell> cells = [];
         List<(Vector2, Vector2)> path;
         Rectangle bounds;
+        
         public Map()
         {
 

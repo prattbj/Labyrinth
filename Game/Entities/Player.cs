@@ -5,25 +5,28 @@ using System.Numerics;
 using System.Threading.Tasks;
 using Labyrinth.Game.Terrain;
 using Labyrinth.Game.Weapons;
+using Labyrinth.Game.Interaction;
 using Labyrinth.Game.Weapons.MeleeWeapons;
 using Labyrinth.Game.Weapons.ProjectileWeapons;
 using Raylib_cs;
+using System.Security.Cryptography.X509Certificates;
 
-namespace Labyrinth.Game.Entities.Players
+namespace Labyrinth.Game.Entities
 {
-    public class Player
+    public class Player : Interactable
     {
         private Texture2D texture;
         private Vector2 pos;
         //private Vector2? pathEnd;
         private Vector2 movementVector = new(0, 0);
         private float speed = 800;
-        private float projectileSpeedMultiplier = 1;
+        //private float projectileSpeedMultiplier = 1;
         private float cooldownReduction = 1.0f;
         private Weapon abilityOne = new PeaShooter();
         private Map map;
         private int currentCellKey;
         private int radius = 32;
+        private int visibilityRadius = 1000;
         public Player(Map map)
         {
             this.map = map;
@@ -37,7 +40,10 @@ namespace Labyrinth.Game.Entities.Players
 
         }
 
-        
+        public int GetRadius()
+        {
+            return radius;
+        }
         public System.Numerics.Vector2 GetPos()
         {
             return pos;
@@ -155,10 +161,10 @@ namespace Labyrinth.Game.Entities.Players
 
 
         }
-       
+
         static bool LinesIntersect(Vector2 p1, Vector2 p2, Vector2 q1, Vector2 q2)
         {
-            float Cross(Vector2 a, Vector2 b) => a.X * b.Y - a.Y * b.X;
+            static float Cross(Vector2 a, Vector2 b) => a.X * b.Y - a.Y * b.X;
 
             Vector2 r = p2 - p1;
             Vector2 s = q2 - q1;
@@ -171,14 +177,19 @@ namespace Labyrinth.Game.Entities.Players
 
             return t >= 0 && t <= 1 && u >= 0 && u <= 1;
         }
-        public float GetSpeedMultiplier()
-        {
-            return projectileSpeedMultiplier;
-        }
+        // public float GetSpeedMultiplier()
+        // {
+        //     return projectileSpeedMultiplier;
+        // }
 
         public float GetCooldownReduction()
         {
             return cooldownReduction;
+        }
+
+        public int GetVisibilityRadius()
+        {
+            return visibilityRadius;
         }
     }
 }

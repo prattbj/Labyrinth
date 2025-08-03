@@ -7,6 +7,9 @@ namespace Labyrinth.Game.Weapons.MeleeWeapons
 {
     abstract public class MeleeWeapon : Weapon
     {
-        
+        public void DrawAnimation()
+        {
+
+        }
     }
 }
