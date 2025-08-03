@@ -4,7 +4,7 @@ using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using Labyrinth.Game.Entities.Players;
+using Labyrinth.Game.Entities;
 using Labyrinth.Game.Projectiles;
 
 namespace Labyrinth.Game.Weapons.ProjectileWeapons
@@ -31,7 +31,7 @@ namespace Labyrinth.Game.Projectiles
         
         public PeaShooterProjectile(Vector2 pos, Vector2 direction, float speed) : base(pos, direction)
         {
-            this.speed = (Globals.GetGame()?.GetPlayer()?.GetSpeedMultiplier() ?? 1.0f) * speed;
+            this.speed = speed;//(Globals.GetGame()?.GetPlayer()?.GetSpeedMultiplier() ?? 1.0f) * speed;
         }
     }
 }

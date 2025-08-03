@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Labyrinth.Game.Terrain;
 using System.Numerics;
 using Raylib_cs;
-using Labyrinth.Game.Entities.Players;
+using Labyrinth.Game.Entities;
 namespace Labyrinth.Menu.MenuType
 {
     public class MapMenu : IMenu
