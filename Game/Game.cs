@@ -1,5 +1,6 @@
 
 
+using Labyrinth.Game.Entities.Enemies;
 using Labyrinth.Game.Entities;
 using Labyrinth.Game.Terrain;
 using Labyrinth.Game.Projectiles;
@@ -13,7 +14,7 @@ namespace Labyrinth.Game
         Player? player;
         Map map = new();
         List<Projectile> projectiles = [];
-        Dictionary<int, List<Enemy>> enemies;
+        Dictionary<int, List<Enemy>> enemies = [];
         Camera2D camera;
         
         Shader visibilityShader = Raylib.LoadShader(null, "./Assets/Shaders/visibility.fs");
@@ -28,13 +29,24 @@ namespace Labyrinth.Game
             playerPosLoc = Raylib.GetShaderLocation(visibilityShader, "playerPos");
             radiusLoc = Raylib.GetShaderLocation(visibilityShader, "radius");
             screenSizeLoc = Raylib.GetShaderLocation(visibilityShader, "screenSize");
-
+            foreach (var cell in map.GetCells())
+            {
+                enemies.Add(cell.GetIndex(), [new Spikes(map, enemies, cell.GetCenter())]);
+            }
             // Set static values once
             Raylib.SetShaderValue(visibilityShader, screenSizeLoc, Globals.GetScreenSize(), ShaderUniformDataType.Vec2);
         }
         public Map GetMap()
         {
             return map;
+        }
+        public void AddEnemy(Enemy enemy)
+        {
+            enemies[enemy.GetCurrentCellKey()].Add(enemy);
+        }
+        public List<Enemy> GetEnemies(int index)
+        {
+            return enemies[index];
         }
         public void Draw()
         {
@@ -58,7 +70,7 @@ namespace Labyrinth.Game
             Raylib.EndMode2D();
             Raylib.EndTextureMode();
             Raylib.BeginShaderMode(visibilityShader);
-            Raylib.DrawTextureRec(target.Texture, new Rectangle( 0, 0, target.Texture.Width, -target.Texture.Height), new Vector2(0, 0), Color.White);
+            Raylib.DrawTextureRec(target.Texture, new Rectangle(0, 0, target.Texture.Width, -target.Texture.Height), new Vector2(0, 0), Color.White);
             Raylib.EndShaderMode();
         }
 

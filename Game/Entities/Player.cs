@@ -35,6 +35,7 @@ namespace Labyrinth.Game.Entities
             Raylib.ImageDrawRectangle(ref image, 0, 0, image.Width, image.Height, Color.Blank);
             Raylib.ImageDrawCircle(ref image, image.Width / 2, image.Height / 2, image.Width / 2, Color.Blue);
             texture = Raylib.LoadTextureFromImage(image);
+            Raylib.UnloadImage(image);
             currentCellKey = map.GetSpawnCellKey();
             pos = map.GetCell(currentCellKey).GetPolygon().Aggregate(Vector2.Zero, (sum, v) => sum + v) / map.GetCell(currentCellKey).GetPolygon().Length;// ?? new(0);
 

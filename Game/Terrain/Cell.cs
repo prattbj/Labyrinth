@@ -7,6 +7,7 @@ using Raylib_cs;
 using System.Net.Quic;
 using System.Reflection;
 using System.Diagnostics;
+using Labyrinth.Game.Entities.Enemies;
 namespace Labyrinth.Game.Terrain
 {
     public class Cell
@@ -55,7 +56,6 @@ namespace Labyrinth.Game.Terrain
             {
                 links.Add(c.Index);
             }
-
 
 
 
@@ -260,22 +260,31 @@ namespace Labyrinth.Game.Terrain
 
             Rlgl.Begin(DrawMode.Triangles);
             Rlgl.SetTexture(wallTexture.Id);
-            DrawEdges();
+            var drawn = DrawEdges();
             Rlgl.End();
 
             Rlgl.SetTexture(0);
+            //if you copy the second loop and put it into drawEdges (using index instead of cell) it completely breaks the game
+            foreach (var cell in drawn)
+            {
+                foreach (var enemy in Globals.GetGame()?.GetEnemies(cell) ?? [])
+                {
+                    enemy.Draw();
+                }
+            }
+            
         }
-        public void DrawEdges(HashSet<int>? drawnCells = null)
+        public HashSet<int> DrawEdges(HashSet<int>? drawnCells = null)
         {
             drawnCells ??= [index];
             //if (drawnCells.Contains(index)) return;
             //drawnCells.Add(index);
-
+            
             seen = true;
             Vector2 currentPos = Globals.GetGame()?.GetPlayer()?.GetPos() ?? new(0, 0);
             int radius = 1500;
 
-
+            
             float scale = 0.003f;
             Color color = section > -1 ? sectionColors[section] : Color.Beige;
             Rlgl.Color4ub(color.R, color.G, color.B, color.A);
@@ -305,9 +314,10 @@ namespace Labyrinth.Game.Terrain
                         }
                     }
                 }
-                
-                
+
+
             }
+            return drawnCells;
             // foreach (var (a, b, index1, index2) in linkedLines)
             // {
             //     if (Raylib.CheckCollisionCircleLine(currentPos, radius, a, b))

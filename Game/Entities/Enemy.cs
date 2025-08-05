@@ -9,25 +9,35 @@ using Raylib_cs;
 
 namespace Labyrinth.Game.Entities
 {
-    public abstract class Enemy(Map map, Dictionary<int, List<Enemy>> enemies) : Interactable
+    public abstract class Enemy : Interactable
     {
-         Dictionary<int, List<Enemy>> enemies = enemies;
-        protected Texture2D texture;
+        public Enemy(Map map, Dictionary<int, List<Enemy>> enemies, Vector2 pos)
+        {
+            this.enemies = enemies;
+            this.map = map;
+            this.pos = pos;
+        }
+        Dictionary<int, List<Enemy>> enemies;
+        protected abstract Texture2D Texture { get; }
         private int currentCellKey;
-        protected Map map = map;
+        protected Map map;
         protected int range;
         protected int originCell;
         protected Vector2 pos;
         protected int radius;
-        protected void Draw()
+        public void Draw()
         {
-            Raylib.DrawTexture(texture, (int)pos.X, (int)pos.Y, Color.White);
+            Raylib.DrawTextureEx(Texture, pos, 0, 1, Color.White);
         }
         abstract protected void Interact();
         public void PerformActions()
         {
             Move();
             Interact();
+        }
+        public int GetCurrentCellKey()
+        {
+            return currentCellKey;
         }
         public void Move()
         {
