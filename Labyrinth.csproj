@@ -47,7 +47,12 @@
         <WasmFilesToIncludeInFileSystem Include="Assets\**\*.*" TargetPath="Assets\%(RecursiveDir)\%(Filename)%(Extension)" />
       </ItemGroup>
       <PropertyGroup>
-          <EmccFlags>-s USE_GLFW=3 -O3 -lexports.js</EmccFlags>
+          <EmccFlags>
+            -s USE_GLFW=3
+            -s MIN_WEBGL_VERSION=2
+            -s MAX_WEBGL_VERSION=2
+            -O3
+          </EmccFlags>
           <!-- -lexports.js -sASYNCIFY=1-->
         </PropertyGroup>
     </When>

@@ -28,7 +28,7 @@ namespace Labyrinth.Game.Terrain
         private readonly int section = -1;
         private readonly int index;
         private readonly Vector2 center;
-        static Shader shader = Raylib.LoadShader(null, "./Assets/Shaders/WallFragment.glsl");
+        //static Shader shader = Raylib.LoadShader(null, "./Assets/Shaders/WallFragment.glsl");
         static Texture2D wallTexture = Raylib.LoadTexture("./Assets/Textures/CaveWall.png");
 
         //static RenderTexture2D 
