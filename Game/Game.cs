@@ -16,8 +16,12 @@ namespace Labyrinth.Game
         List<Projectile> projectiles = [];
         List<Enemy> enemies = [];
         Camera2D camera;
-        
+#if WASM
+        Shader visibilityShader = Raylib.LoadShader(null, "./Assets/Shaders/visibility_web.fs");
+#else
         Shader visibilityShader = Raylib.LoadShader(null, "./Assets/Shaders/visibility.fs");
+#endif
+        
         RenderTexture2D target = Raylib.LoadRenderTexture((int)Globals.GetScreenSize().X, (int)Globals.GetScreenSize().Y);
         int playerPosLoc;
         int radiusLoc;
