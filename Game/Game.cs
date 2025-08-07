@@ -14,7 +14,7 @@ namespace Labyrinth.Game
         Player? player;
         Map map = new();
         List<Projectile> projectiles = [];
-        Dictionary<int, List<Enemy>> enemies = [];
+        List<Enemy> enemies = [];
         Camera2D camera;
         
         Shader visibilityShader = Raylib.LoadShader(null, "./Assets/Shaders/visibility.fs");
@@ -31,7 +31,8 @@ namespace Labyrinth.Game
             screenSizeLoc = Raylib.GetShaderLocation(visibilityShader, "screenSize");
             foreach (var cell in map.GetCells())
             {
-                enemies.Add(cell.GetIndex(), [new Spikes(map, enemies, cell.GetCenter())]);
+                if (cell.GetIndex() != player.GetCurrentCellKey())
+                    enemies.Add(new Slime(map, enemies, cell.GetCenter(), cell.GetIndex()));
             }
             // Set static values once
             Raylib.SetShaderValue(visibilityShader, screenSizeLoc, Globals.GetScreenSize(), ShaderUniformDataType.Vec2);
@@ -42,11 +43,11 @@ namespace Labyrinth.Game
         }
         public void AddEnemy(Enemy enemy)
         {
-            enemies[enemy.GetCurrentCellKey()].Add(enemy);
+            enemies.Add(enemy);
         }
         public List<Enemy> GetEnemies(int index)
         {
-            return enemies[index];
+            return enemies.Where(e => e.GetCurrentCellKey() == index).ToList();
         }
         public void Draw()
         {
@@ -83,37 +84,93 @@ namespace Labyrinth.Game
             }
             //map.Debug(camera);
         }
+        bool IsLineOnScreen(Vector2 a, Vector2 b)
+        {
+            Vector2 screenSize = Globals.GetScreenSize(); // Or new Vector2(Raylib.GetScreenWidth(), Raylib.GetScreenHeight())
 
+            float zoom = 1f;
+
+            // Convert screen rect (centered around camera.target) to world-space rectangle
+            float halfWidth = screenSize.X / 2f / zoom;
+            float halfHeight = screenSize.Y / 2f / zoom;
+
+            Vector2 topLeft = new Vector2(camera.Target.X - halfWidth, camera.Target.Y - halfHeight);
+            Rectangle screenRect = new Rectangle(topLeft.X, topLeft.Y, halfWidth * 2, halfHeight * 2);
+            return Raylib.CheckCollisionRecs(screenRect, GetBoundingBox(a, b));
+        }
+
+        Rectangle GetBoundingBox(Vector2 a, Vector2 b)
+        {
+            float minX = MathF.Min(a.X, b.X);
+            float minY = MathF.Min(a.Y, b.Y);
+            float maxX = MathF.Max(a.X, b.X);
+            float maxY = MathF.Max(a.Y, b.Y);
+            return new Rectangle(minX, minY, maxX - minX, maxY - minY);
+        }
         public void PerformActions()
         {
-            player?.PerformActions();
-            //TODO: add logic to draw and perform actions. 
-            //TODO: We should borrow the same logic from the cell drawing to determine which enemies get to interact based on the cells that are visible to the player.
-            // foreach (map.GetCell(player?.GetCurrentCellKey()))
-            // {
-            //     enemy.Move();
-            // }
-            camera.Offset = new(Globals.GetScreenSize().X / 2, Globals.GetScreenSize().Y / 2);
-            camera.Target = player?.GetPos() ?? new(Globals.GetScreenSize().X / 2, Globals.GetScreenSize().Y / 2);
-            foreach (Projectile projectile in projectiles)
+            if (player != null)
             {
-                projectile.Move();
-            }
+                player.PerformActions();
 
-            float scroll = Raylib.GetMouseWheelMove();
+                HashSet<int> visibleCellKeys = new();
+                Queue<int> toProcess = new();
 
-            if (scroll != 0)
-            {
-                // Sensitivity factor — tweak this for feel
-                float zoomFactor = 1.1f;
+                int startKey = player.GetCurrentCellKey();
+                visibleCellKeys.Add(startKey);
+                toProcess.Enqueue(startKey);
 
-                if (scroll > 0)
-                    camera.Zoom *= zoomFactor;
-                else
-                    camera.Zoom /= zoomFactor;
+                while (toProcess.Count > 0)
+                {
+                    int currentKey = toProcess.Dequeue();
+                    Cell current = map.GetCell(currentKey);
 
-                // Clamp to a sane range (to avoid flipping or infinitesimal zoom)
-                camera.Zoom = Math.Clamp(camera.Zoom, 0.01f, 100.0f);
+                    foreach (var (a, b, i1, i2) in current.GetLinkedLines())
+                    {
+                        if (IsLineOnScreen(a, b))
+                        {
+                            // Add both ends of the line
+                            foreach (int neighborKey in new[] { i1, i2 })
+                            {
+                                if (!visibleCellKeys.Contains(neighborKey))
+                                {
+                                    visibleCellKeys.Add(neighborKey);
+                                    toProcess.Enqueue(neighborKey);
+                                }
+                            }
+                        }
+                    }
+                }
+                foreach (var enemy in enemies)
+                {
+                    int cellKey = enemy.GetCurrentCellKey();
+                    if (visibleCellKeys.Contains(cellKey))
+                    {
+                        enemy.PerformActions();
+                    }
+                }
+                camera.Offset = new(Globals.GetScreenSize().X / 2, Globals.GetScreenSize().Y / 2);
+                camera.Target = player?.GetPos() ?? new(Globals.GetScreenSize().X / 2, Globals.GetScreenSize().Y / 2);
+                foreach (Projectile projectile in projectiles)
+                {
+                    projectile.Move();
+                }
+                
+                float scroll = Raylib.GetMouseWheelMove();
+
+                if (scroll != 0)
+                {
+                    // Sensitivity factor — tweak this for feel
+                    float zoomFactor = 1.1f;
+
+                    if (scroll > 0)
+                        camera.Zoom *= zoomFactor;
+                    else
+                        camera.Zoom /= zoomFactor;
+
+                    // Clamp to a sane range (to avoid flipping or infinitesimal zoom)
+                    camera.Zoom = Math.Clamp(camera.Zoom, 0.01f, 100.0f);
+                }
             }
         }
         public Camera2D GetCamera2D()

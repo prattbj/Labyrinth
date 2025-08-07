@@ -19,7 +19,7 @@ namespace Labyrinth.Game.Entities
         private Vector2 pos;
         //private Vector2? pathEnd;
         private Vector2 movementVector = new(0, 0);
-        private float speed = 800;
+        //private float speed = 800;
         //private float projectileSpeedMultiplier = 1;
         private float cooldownReduction = 1.0f;
         private Weapon abilityOne = new PeaShooter();
@@ -55,7 +55,8 @@ namespace Labyrinth.Game.Entities
         }
         public void Draw()
         {
-            Raylib.DrawTextureEx(texture, pos, 0, 1, Color.White);
+            Raylib.DrawTextureEx(texture, pos - new Vector2(radius, radius), 0, 1, Color.White);
+            Raylib.DrawText(currentHealth.ToString(), (int)pos.X, (int)pos.Y, 16, Color.Pink);
         }
         public void HandleInputs(Camera2D camera)
         {
@@ -64,7 +65,7 @@ namespace Labyrinth.Game.Entities
         }
         private void HandleMovementInput(Camera2D camera)
         {
-            movementVector = new System.Numerics.Vector2(0, 0);
+            movementVector = new Vector2(0, 0);
 
             if (Raylib.IsKeyDown(KeyboardKey.W))
                 movementVector.Y -= 1;
@@ -76,7 +77,7 @@ namespace Labyrinth.Game.Entities
                 movementVector.X += 1;
 
             movementVector = Raymath.Vector2Normalize(movementVector);
-            movementVector = Raymath.Vector2Scale(movementVector, speed / Globals.GetTickRate());
+            movementVector = Raymath.Vector2Scale(movementVector, GetSpeed() / Globals.GetTickRate());
             //#region <Mouse Movement Input>
             /*
             if (Raylib.IsMouseButtonDown(MouseButton.Right))
@@ -93,8 +94,8 @@ namespace Labyrinth.Game.Entities
         {
             if (Raylib.IsMouseButtonDown(MouseButton.Left))
             {
-                System.Numerics.Vector2 mousePos = Raylib.GetMousePosition();
-                System.Numerics.Vector2 worldMousePos = Raylib.GetScreenToWorld2D(mousePos, camera);
+                Vector2 mousePos = Raylib.GetMousePosition();
+                Vector2 worldMousePos = Raylib.GetScreenToWorld2D(mousePos, camera);
                 abilityOne.Activate(this, new(pos.X + texture.Width / 2, pos.Y + texture.Height / 2), Raymath.Vector2Normalize(Raymath.Vector2Subtract(worldMousePos, pos)));
             }
         }
@@ -102,6 +103,11 @@ namespace Labyrinth.Game.Entities
         {
             Move();
             ReduceCooldowns();
+            ApplyRegen();
+            if (ApplyDamage())
+            {
+                Menu.Menu.SetCurrentMenu(new Menu.MenuType.DeathMenu());
+            }
         }
         private void ReduceCooldowns()
         {
@@ -119,36 +125,35 @@ namespace Labyrinth.Game.Entities
         }
         public Vector2 GetCenter()
         {
-            return pos + new Vector2(radius, radius);
+            return pos;
         }
         private void Move()
         {
             Cell currentCell = map.GetCell(currentCellKey);
 
-            float playerRadius = radius;
-            Vector2 centerOffset = new(radius, radius);
+           
 
-            Vector2 previousCenter = pos + centerOffset;
+            Vector2 previousCenter = pos;
 
-            pos += movementVector;
-            Vector2 newCenter = pos + centerOffset;
+            pos += movementVector + GetDisplacement();
+            Vector2 newCenter = pos;
 
             foreach (var (a, b) in currentCell.GetCollisionLines())
             {
                 Vector2 closest = ClosestPointOnLineSegment(a, b, newCenter);
                 float distSq = Vector2.DistanceSquared(newCenter, closest);
 
-                if (distSq < playerRadius * playerRadius)
+                if (distSq < radius * radius)
                 {
                     Vector2 collisionNormal = Vector2.Normalize(newCenter - closest);
-                    float penetrationDepth = playerRadius - MathF.Sqrt(distSq);
+                    float penetrationDepth = radius - MathF.Sqrt(distSq);
                     pos += collisionNormal * penetrationDepth;
 
-                    newCenter = pos + centerOffset;
+                    newCenter = pos;
                 }
             }
 
-            Vector2 proposedCenter = pos + centerOffset;
+            Vector2 proposedCenter = pos;
 
 
             foreach (var (a, b, cellA, cellB) in currentCell.GetLinkedLines())

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Numerics;
 namespace Labyrinth.Game.Interaction
 {
-    public class MultiplicativeSource(float value) : Source<float>(value)
+    public class MultiplicativeSource(float value, int persistence = 1) : Source<float>(value, persistence)
     {
         protected override void ApplySource(ref float value)
         {

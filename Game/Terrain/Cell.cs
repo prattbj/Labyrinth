@@ -272,7 +272,6 @@ namespace Labyrinth.Game.Terrain
                     enemy.Draw();
                 }
             }
-            
         }
         public HashSet<int> DrawEdges(HashSet<int>? drawnCells = null)
         {
@@ -291,7 +290,7 @@ namespace Labyrinth.Game.Terrain
 
             foreach (var triangle in trianglesToDraw)
             {
-
+                
                 if (Raylib.CheckCollisionCircleLine(currentPos, radius, new Vector2(triangle[0].X, triangle[0].Y), new Vector2(triangle[1].X, triangle[1].Y)))
                 {
                     foreach (var point in triangle)
