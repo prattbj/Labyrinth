@@ -1,25 +1,25 @@
 {
   "mainAssemblyName": "Labyrinth.dll",
   "resources": {
-    "hash": "sha256-h0kUZPLvaoP348ZPjIMkuRYkF7QThNPi6FFiy/Z7a80=",
+    "hash": "sha256-SBqj6u6ua0kiIeooHPXm5px8uQeE+Q5wDRzxvyU/qFw=",
     "jsModuleNative": {
-      "dotnet.native.js": "sha256-NFQnnriDZUbPrerDaF5b0DcGVJBWMd+Jme/Fuudc0LM="
+      "dotnet.native.js": "sha256-CtRjqoLJb6u6MvHuV87MFriRIebvxul0LD+gJX1vY8w="
     },
     "jsModuleRuntime": {
-      "dotnet.runtime.js": "sha256-x+PnWU47EIr/zL3xxqIUMDJi/dy5904TVGunDqCvjIY="
+      "dotnet.runtime.js": "sha256-Isv/63htfX73xgn3/2cZMtk4S8xBcbmlXRgJMDv4mhI="
     },
     "wasmNative": {
-      "dotnet.native.wasm": "sha256-qv4UIyVT26XGaeMzOPvS24JbO/3GwrwATd+d8praqZ0="
+      "dotnet.native.wasm": "sha256-61q37QMthat/MVvxnB+qzKQ647FShTbVaJxiaRhUEiU="
     },
     "coreAssembly": {
-      "Labyrinth.wasm": "sha256-jEDftlm9HvO+XUhbYaOn00/JDCLp6lUt8I91sQozulo=",
+      "Labyrinth.wasm": "sha256-nAP/C3ABODj3kOeyN1vJWPzWahOY4Q01nPwpQmdsQLA=",
       "MIConvexHull.wasm": "sha256-Ne5pVWfHj44bFKkZt6wCvQfv4t6ERz/3Q3ib9/JvW0Y=",
-      "Raylib-cs.wasm": "sha256-DJ3lTarJyRsW0spm2MAebf/6EtVCocmnatnRC9eBIUI=",
-      "System.Collections.wasm": "sha256-YHXMD2cVBDhPGi6OjKsT4+69/HyTQxHtMDTE/BgOTTc=",
-      "System.Console.wasm": "sha256-gaqlLsxsdHi/MB6ozoTzSDa7YrJCO5Yerq/CjtGkhfo=",
-      "System.Linq.wasm": "sha256-mZGpkF3UP01htqgUVJZZoJVuE7dcaCxqG3T6y2Rtp+g=",
-      "System.Private.CoreLib.wasm": "sha256-H4Zc9pimloXPm0eE1ABB6cpYu6ZsFGlUjUO/ge+Qi+c=",
-      "System.Runtime.InteropServices.JavaScript.wasm": "sha256-eO7fUfou0qQKPbL9kjP4uOevrm6pTK+CF1BcFYBOamw="
+      "Raylib-cs.wasm": "sha256-74QdJrgLff+6jXBM9foB8jZm1LkXG6ZUu5J7e3dsVrU=",
+      "System.Collections.wasm": "sha256-0yXtB0a+TYqqtzvz6hqeHnaRuFdqeHOUVNyqkmUjjy4=",
+      "System.Console.wasm": "sha256-pMz03rAhr5tPtF1Fhr5JPcjP8sj+E2bUxkYQVOxdeTk=",
+      "System.Linq.wasm": "sha256-aOcqFrkkS+NRwZO7fDv+wutqDnu2YnT6ynjEbChIvkE=",
+      "System.Private.CoreLib.wasm": "sha256-EkhZ2uljyEf1UfzxPYJRSdycpPHKppQXvUI5PBqKizw=",
+      "System.Runtime.InteropServices.JavaScript.wasm": "sha256-noGf8O6VRIvGCs0srT9DeOcUo2ocOO0HaSOkM63bXLM="
     },
     "assembly": {},
     "coreVfs": {
