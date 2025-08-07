@@ -1,15 +1,20 @@
 #version 300 es
+precision mediump float;
 
-// Inputs from raylib
-uniform vec2 playerPos;   // Player position in screen coords
-uniform float radius;     // View radius
-uniform vec2 screenSize;  // Screen width & height
+// Uniforms
+uniform vec2 playerPos;
+uniform float radius;
+uniform vec2 screenSize;
 
-// Provided by raylib
+// Inputs
 in vec2 fragTexCoord;
 in vec4 fragColor;
-out vec4 finalColor;
+
+// Texture sampler
 uniform sampler2D texture0;
+
+// Output
+out vec4 finalColor;
 
 void main()
 {
