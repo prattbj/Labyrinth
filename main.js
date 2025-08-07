@@ -8,9 +8,9 @@ canvas.style.left = 0;
 if (!canvas) {
     console.error("Canvas element not found");
 }
-const width = (Math.floor(window.innerWidth * 3 / 4)).toString();
+const width = (Math.floor(window.innerWidth * 15 / 16)).toString();
 
-const height = (Math.floor(window.innerHeight * 3 / 4)).toString();
+const height = (Math.floor(window.innerHeight * 15 / 16)).toString();
 const { getAssemblyExports, getConfig, runMain } = await dotnet
     .withApplicationArguments(width, height)
     .create();
