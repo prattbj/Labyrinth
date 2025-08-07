@@ -1,4 +1,4 @@
-#version 300
+#version 330
 
 // Inputs from raylib
 uniform vec2 playerPos;   // Player position in screen coords
