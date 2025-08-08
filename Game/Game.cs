@@ -3,7 +3,7 @@
 using Labyrinth.Game.Entities.Enemies;
 using Labyrinth.Game.Entities;
 using Labyrinth.Game.Terrain;
-using Labyrinth.Game.Projectiles;
+using Labyrinth.Game.Entities.Projectiles;
 using Raylib_cs;
 using Labyrinth.Menu.MenuType;
 using System.Numerics;
@@ -14,6 +14,7 @@ namespace Labyrinth.Game
         Player? player;
         Map map = new();
         List<Projectile> projectiles = [];
+        List<Projectile> projectilesToRemove = [];
         List<Enemy> enemies = [];
         Camera2D camera;
 #if WASM
@@ -45,13 +46,17 @@ namespace Labyrinth.Game
         {
             return map;
         }
+        public void RemoveProjectile(Projectile proj)
+        {
+            projectilesToRemove.Add(proj);
+        }
         public void AddEnemy(Enemy enemy)
         {
             enemies.Add(enemy);
         }
         public List<Enemy> GetEnemies(int index)
         {
-            return enemies.Where(e => e.GetCurrentCellKey() == index).ToList();
+            return [.. enemies.Where(e => e.GetCurrentCellKey() == index)];
         }
         public void Draw()
         {
@@ -159,7 +164,8 @@ namespace Labyrinth.Game
                 {
                     projectile.Move();
                 }
-                
+                projectiles.RemoveAll(projectilesToRemove.Contains);
+                projectilesToRemove.Clear();
                 float scroll = Raylib.GetMouseWheelMove();
 
                 if (scroll != 0)

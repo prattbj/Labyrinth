@@ -4,10 +4,10 @@ using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
 using Labyrinth.Game.Terrain;
-using Labyrinth.Game.Weapons;
+using Labyrinth.Game.Entities.Weapons;
 using Labyrinth.Game.Interaction;
-using Labyrinth.Game.Weapons.MeleeWeapons;
-using Labyrinth.Game.Weapons.ProjectileWeapons;
+using Labyrinth.Game.Entities.Weapons.MeleeWeapons;
+using Labyrinth.Game.Entities.Weapons.ProjectileWeapons;
 using Raylib_cs;
 using System.Security.Cryptography.X509Certificates;
 
@@ -96,7 +96,7 @@ namespace Labyrinth.Game.Entities
             {
                 Vector2 mousePos = Raylib.GetMousePosition();
                 Vector2 worldMousePos = Raylib.GetScreenToWorld2D(mousePos, camera);
-                abilityOne.Activate(this, new(pos.X + texture.Width / 2, pos.Y + texture.Height / 2), Raymath.Vector2Normalize(Raymath.Vector2Subtract(worldMousePos, pos)));
+                abilityOne.Activate(this, Raymath.Vector2Normalize(Raymath.Vector2Subtract(worldMousePos, pos)));
             }
         }
         public void PerformActions()

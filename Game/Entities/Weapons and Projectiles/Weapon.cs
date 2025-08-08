@@ -5,14 +5,14 @@ using System.Threading.Tasks;
 using System.Numerics;
 using Labyrinth.Game.Entities;
 
-namespace Labyrinth.Game.Weapons
+namespace Labyrinth.Game.Entities.Weapons
 {
     public abstract class Weapon
     {
 
         protected float baseCooldown;
         protected float currentCooldown = 0;
-        abstract public void Activate(Player player, Vector2 pos, Vector2 direction);
+        abstract public void Activate(Player player, Vector2 direction);
         public void ReduceCooldown()
         {
             if (currentCooldown > 0)
